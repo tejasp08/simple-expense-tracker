@@ -14,10 +14,6 @@ public class Transaction {
     }
     
     //getters
-    public String getDate() {
-        return date;
-    }
-
     public String getType() {
         return type;
     }
@@ -26,15 +22,11 @@ public class Transaction {
         return amount;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     //toString method
     @Override
     public String toString() {
-        return "Transaction [date=" + date + ", type=" + type + ", amount=" + amount + ", description=" + description
-                + "]";
+        return "Date: " + date + ", Type: " + type + ", Amount: " + amount + 
+        ", Description: " + description;
     }
 
 }
