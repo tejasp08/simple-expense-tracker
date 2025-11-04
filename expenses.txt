@@ -1,0 +1,4 @@
+Date, Type(Income/Expense), Amount, Description
+04-11-2025, Expense, 24, Travel
+04-11-2025, Expense, 20, Food
+04-11-2025, Expense, 10, Stationary
