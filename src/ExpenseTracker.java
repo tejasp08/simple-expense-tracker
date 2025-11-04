@@ -1,11 +1,13 @@
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ExpenseTracker {
-    
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String fileName = "expenses.txt";
@@ -16,8 +18,7 @@ public class ExpenseTracker {
         // int amount;
         // String description;
 
-        //ArrayList<Transaction> transactions = new ArrayList<>();
-        
+        // ArrayList<Transaction> transactions = new ArrayList<>();
 
         System.out.println("Personal Expense Tracker:)");
 
@@ -30,20 +31,19 @@ public class ExpenseTracker {
 
             switch (choice) {
                 case 1:
-                while (true) {
-                    
-                    addTransaction(fileName, sc);
-                    System.out.println();
-                    System.out.println("Do you want to add another transaction ? (yes/no)");
-                    String choice2 = sc.next().toLowerCase();
-
-                    if (choice2.equals("no")) {
-                        break;
+                    while (true) {
+                        addTransaction(fileName, sc);
+                        //System.out.println();
+                        System.out.println("Do you want to add another transaction ? (yes/no)");
+                        String choice2 = sc.next();
+                        choice2.toLowerCase();
+                        if (choice2.equals("no")) {
+                            break;
+                        }
                     }
-                }
-                break;
+                    break;
                 case 2:
-                    System.out.println("view");
+                    viewTransactions(fileName);
                     break;
                 case 3:
                     System.out.println("summary");
@@ -57,16 +57,17 @@ public class ExpenseTracker {
             terminateChoice = sc.next().toLowerCase();
 
         } while (!terminateChoice.equals("no"));
-        
+
         System.out.println("Exiting program. Goodbye!");
 
     }
 
-    //Methods
+    // Methods
     private static void addTransaction(String fileName, Scanner sc) {
+
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName, true));
-            PrintWriter out = new PrintWriter(bw)){
-            
+                PrintWriter out = new PrintWriter(bw)) {
+
             System.out.println("Adding Transaction");
             System.out.println("Format: DD-MM-YYYY, Type, Amount, Description");
             System.out.print("Enter Date: ");
@@ -77,16 +78,31 @@ public class ExpenseTracker {
             int amount = sc.nextInt();
             System.out.print("Enter Description: ");
             String description = sc.next();
-            //Transaction t = new Transaction(date, type, amount, description);
-            //System.out.println("Transaction added: " + t);
-            out.println(date + ", " + type +", " + amount + ", " + description);
+            // Transaction t = new Transaction(date, type, amount, description);
+            System.out.println("\nTransaction added");
+            out.println(date + ", " + type + ", " + amount + ", " + description);
 
         } catch (Exception e) {
             System.out.println("Error writing in file!");
         }
     }
 
-    private static void viewTransaction() {
-        
+    private static void viewTransactions(String fileName) {
+        File file = new File(fileName);
+
+        if (!file.exists()) {
+            System.out.println("No data found yet. Add some values first!");
+            return;
+        }
+        System.out.println("---Previous Transactions---");
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            //System.out.println("Text in the file: ");
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in reading file");
+        }
     }
 }
