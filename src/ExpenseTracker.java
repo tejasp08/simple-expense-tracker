@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -5,21 +8,21 @@ public class ExpenseTracker {
     
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        // String fileName = "expenses.txt";
+        String fileName = "expenses.txt";
 
         String terminateChoice;
-        String date;
-        String type;
-        int amount;
-        String description;
+        // String date;
+        // String type;
+        // int amount;
+        // String description;
 
-        ArrayList<Transaction> transactions = new ArrayList<>();
+        //ArrayList<Transaction> transactions = new ArrayList<>();
         
 
-        System.out.println("---Personal Expense Tracker:)---");
+        System.out.println("Personal Expense Tracker:)");
 
         do {
-            System.out.println("What do you want to do ?");
+            System.out.println("---MENU---");
             System.out.println("1. Add Transaction");
             System.out.println("2. View All Transaction");
             System.out.println("3. View Summary");
@@ -28,21 +31,8 @@ public class ExpenseTracker {
             switch (choice) {
                 case 1:
                 while (true) {
-                    System.out.println("Adding Transaction");
-                    System.out.println("Format: DD-MM-YYYY, Type, Amount, Description");
-                    System.out.print("Enter Date: ");
-                    date = sc.next();
-                    System.out.print("Enter Type: ");
-                    type = sc.next();
-                    System.out.print("Enter Amount: ");
-                    amount = sc.nextInt();
-                    System.out.print("Enter Description: ");
-                    description = sc.next();
                     
-                    Transaction t = new Transaction(date, type, amount, description);
-                    System.out.println("Transaction added: " + t);
-                    //addTransaction(date, type, amount, description);
-                    transactions.add(t);
+                    addTransaction(fileName, sc);
                     System.out.println();
                     System.out.println("Do you want to add another transaction ? (yes/no)");
                     String choice2 = sc.next().toLowerCase();
@@ -53,7 +43,7 @@ public class ExpenseTracker {
                 }
                 break;
                 case 2:
-                    System.out.println(transactions);
+                    System.out.println("view");
                     break;
                 case 3:
                     System.out.println("summary");
@@ -73,8 +63,27 @@ public class ExpenseTracker {
     }
 
     //Methods
-    private static void addTransaction() {
+    private static void addTransaction(String fileName, Scanner sc) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName, true));
+            PrintWriter out = new PrintWriter(bw)){
+            
+            System.out.println("Adding Transaction");
+            System.out.println("Format: DD-MM-YYYY, Type, Amount, Description");
+            System.out.print("Enter Date: ");
+            String date = sc.next();
+            System.out.print("Enter Type: ");
+            String type = sc.next();
+            System.out.print("Enter Amount: ");
+            int amount = sc.nextInt();
+            System.out.print("Enter Description: ");
+            String description = sc.next();
+            //Transaction t = new Transaction(date, type, amount, description);
+            //System.out.println("Transaction added: " + t);
+            out.println(date + ", " + type +", " + amount + ", " + description);
 
+        } catch (Exception e) {
+            System.out.println("Error writing in file!");
+        }
     }
 
     private static void viewTransaction() {
