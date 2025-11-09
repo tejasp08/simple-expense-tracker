@@ -1,52 +1,35 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class ExpenseTracker {
-
+    private static ArrayList<Transaction> transactions = new ArrayList<>();
+    private static Scanner sc = new Scanner(System.in);
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        String fileName = "expenses.txt";
 
         String terminateChoice;
-        // String date;
-        // String type;
-        // int amount;
-        // String description;
 
-        // ArrayList<Transaction> transactions = new ArrayList<>();
-
-        System.out.println("Personal Expense Tracker:)");
+        System.out.println("--- Personal Expense Tracker:) ---");
 
         do {
-            System.out.println("---MENU---");
+            System.out.println("--- MENU ---");
             System.out.println("1. Add Transaction");
             System.out.println("2. View All Transaction");
             System.out.println("3. View Summary");
+            System.out.println("4. Exit");
             int choice = sc.nextInt();
 
             switch (choice) {
                 case 1:
-                    while (true) {
-                        addTransaction(fileName, sc);
-                        //System.out.println();
-                        System.out.println("Do you want to add another transaction ? (yes/no)");
-                        String choice2 = sc.next();
-                        choice2.toLowerCase();
-                        if (choice2.equals("no")) {
-                            break;
-                        }
-                    }
+                    addTransaction();
                     break;
                 case 2:
-                    viewTransactions(fileName);
+                    viewTransactions();
                     break;
                 case 3:
-                    System.out.println("summary");
+                    viewSummary();
+                    break;
+                case 4:
+                    System.out.println("Exiting program...");
                     break;
                 default:
                     System.out.println("Enter a valid choice!");
@@ -63,46 +46,69 @@ public class ExpenseTracker {
     }
 
     // Methods
-    private static void addTransaction(String fileName, Scanner sc) {
+    private static void addTransaction() {
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName, true));
-                PrintWriter out = new PrintWriter(bw)) {
-
+        while (true) {
             System.out.println("Adding Transaction");
             System.out.println("Format: DD-MM-YYYY, Type, Amount, Description");
             System.out.print("Enter Date: ");
             String date = sc.next();
-            System.out.print("Enter Type: ");
+            System.out.print("Enter Type (Income/Expense): ");
             String type = sc.next();
             System.out.print("Enter Amount: ");
             int amount = sc.nextInt();
+            sc.nextLine();
             System.out.print("Enter Description: ");
-            String description = sc.next();
-            // Transaction t = new Transaction(date, type, amount, description);
-            System.out.println("\nTransaction added");
-            out.println(date + ", " + type + ", " + amount + ", " + description);
+            String description = sc.nextLine();
 
-        } catch (Exception e) {
-            System.out.println("Error writing in file!");
+            Transaction t = new Transaction(date, type, amount, description);
+            transactions.add(t);
+            System.out.println("Transaction added: " + t);
+            //out.println(date + " | " + type + " | " + amount + " | " + description);
+            System.out.println("Add another? (yes/no)");
+            String choice = sc.next().toLowerCase();
+            if (choice.equals("no")) {
+                sc.nextLine();
+                break;
+            }
         }
     }
 
-    private static void viewTransactions(String fileName) {
-        File file = new File(fileName);
+    private static void viewTransactions() {
 
-        if (!file.exists()) {
-            System.out.println("No data found yet. Add some values first!");
+        if (transactions.isEmpty()) {
+            System.out.println("No transactions to show.");
             return;
         }
-        System.out.println("---Previous Transactions---");
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            //System.out.println("Text in the file: ");
-            String line;
-            while ((line = br.readLine()) != null) {
-                System.out.println(line);
-            }
-        } catch (Exception e) {
-            System.out.println("Error in reading file");
+        System.out.println("\nDate | Type | Amount | Description");
+        System.out.println("------------------------------------");
+        for (Transaction t : transactions) {
+            System.out.println(t.toString());
         }
+    }
+
+    private static void viewSummary(){
+        if (transactions.isEmpty()) {
+            System.out.println("No transactions to show.");
+            return;
+        }
+
+        int totalIncome =0;
+        int totalExpense = 0;
+
+        for (Transaction t : transactions) {
+            if (t.getType().equalsIgnoreCase("Income")) {
+                totalIncome += t.getAmount();
+            } else if (t.getType().equalsIgnoreCase("Expense")) {
+                totalExpense += t.getAmount();
+            }
+        }
+
+        int balance = totalIncome - totalExpense;
+
+        System.out.println("\n--- Summary ---");
+        System.out.println("Total Income: " + totalIncome);
+        System.out.println("Total Expense: " + totalExpense);
+        System.out.println("Balance: " + balance);
     }
 }
