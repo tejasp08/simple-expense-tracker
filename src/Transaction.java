@@ -1,9 +1,9 @@
 public class Transaction {
     //Fields
-    String date;
-    String type;
-    int amount;
-    String description;
+    private String date;
+    private String type;
+    private int amount;
+    private String description;
 
     //Constructor
     public Transaction(String date, String type, int amount, String description) {
@@ -14,8 +14,16 @@ public class Transaction {
     }
     
     //getters
+    public String getDate() {
+        return date;
+    }
+
     public String getType() {
         return type;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public int getAmount() {
@@ -25,8 +33,7 @@ public class Transaction {
     //toString method
     @Override
     public String toString() {
-        return "Date: " + date + ", Type: " + type + ", Amount: " + amount + 
-        ", Description: " + description;
+        return date + "|" + type + "|" + amount + "|" + description;
     }
 
 }
